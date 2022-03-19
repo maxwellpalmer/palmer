@@ -40,8 +40,8 @@ st_envelope = function(shp){
 #'
 #' @export
 #'
-coord_sf_from_sf <- function(shp, expand=TRUE, ...) {
-  box <- sf::st_bbox(shp)
+coord_sf_from_sf <- function(.shp, expand=TRUE, ...) {
+  box <- sf::st_bbox(.shp)
   ggplot2::coord_sf(xlim = c(box$xmin,
                         box$xmax),
                ylim = c(box$ymin,
@@ -49,6 +49,19 @@ coord_sf_from_sf <- function(shp, expand=TRUE, ...) {
                expand = expand, ...)
 }
 
+#' @rdname coord_sf_from_sf
+#' @export
+coord_sf_from_sf_square <- function(.shp, expand=TRUE, ...) {
+  e <- st_envelope(.shp)
+  b <- st_bbox(e)
+
+  d <- max(b$xmax-b$xmin, b$ymax-b$ymin)/2
+  x <- st_centroid(e)[[1]]
+
+  coord_sf(xlim = c(x[1]-d, x[1]+d),
+           ylim = c(x[2]-d, x[2]+d),
+           expand = expand, ...)
+}
 
 #' Add geom_sf_label with labels located in inscribed circles instead of points on surface.
 #'
@@ -69,7 +82,6 @@ geom_sf_label2 <- function(...) {
 
 #' @rdname geom_sf_label2
 #' @export
-
 geom_sf_text2 <- function(...) {
   ggplot2::geom_sf_text(...,
                         fun.geometry = function(x) {
