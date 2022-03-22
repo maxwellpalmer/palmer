@@ -75,8 +75,12 @@ coord_sf_from_sf_square <- function(.shp, expand=TRUE, ...) {
 geom_sf_label2 <- function(...) {
   ggplot2::geom_sf_label(...,
                          fun.geometry = function(x) {
-                           y <- sf::st_centroid(sf::st_inscribed_circle(sf::st_geometry(x)))
-                           y[!sf::st_is_empty(y)]}
+                           s <- sf_use_s2()
+                           sf_use_s2(FALSE)
+                           y <- suppressMessages(suppressWarnings(sf::st_centroid(sf::st_inscribed_circle(sf::st_geometry(x)))))
+                           sf_use_s2(s)
+                           y[!sf::st_is_empty(y)]
+                           }
   )
 }
 
@@ -85,7 +89,10 @@ geom_sf_label2 <- function(...) {
 geom_sf_text2 <- function(...) {
   ggplot2::geom_sf_text(...,
                         fun.geometry = function(x) {
-                          y <- sf::st_centroid(sf::st_inscribed_circle(sf::st_geometry(x)))
+                          s <- sf_use_s2()
+                          sf_use_s2(FALSE)
+                          y <- suppressMessages(suppressWarnings(sf::st_centroid(sf::st_inscribed_circle(sf::st_geometry(x)))))
+                          sf_use_s2(s)
                           y[!sf::st_is_empty(y)]}
   )
 }
