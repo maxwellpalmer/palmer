@@ -2,12 +2,15 @@
 % Please edit documentation in R/mapping.R
 \name{coord_sf_from_sf}
 \alias{coord_sf_from_sf}
+\alias{coord_sf_from_sf_square}
 \title{Set ggplot coordinates using bounding box of sf object}
 \usage{
-coord_sf_from_sf(shp, expand = TRUE, ...)
+coord_sf_from_sf(.shp, expand = TRUE, ...)
+
+coord_sf_from_sf_square(.shp, expand = TRUE, ...)
 }
 \arguments{
-\item{shp}{A sf object.}
+\item{.shp}{A sf object.}
 
 \item{expand}{A boolean if the coordinates should be expanded to include padding around the shape.}
 

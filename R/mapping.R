@@ -34,7 +34,7 @@ st_envelope = function(shp){
 
 #' Set ggplot coordinates using bounding box of sf object
 #'
-#' @param shp A sf object.
+#' @param .shp A sf object.
 #' @param expand A boolean if the coordinates should be expanded to include padding around the shape.
 #' @param ... Additional arguments passed to `coord_sf`.
 #'
