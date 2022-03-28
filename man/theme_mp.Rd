@@ -4,7 +4,14 @@
 \alias{theme_mp}
 \title{Custom ggplot2 theme}
 \usage{
-theme_mp()
+theme_mp(base_family = "Arial Narrow", base_size = 11, grid = "minor")
+}
+\arguments{
+\item{base_family}{Base font family. Default is "Arial Narrow".}
+
+\item{base_size}{Default is \code{11}.}
+
+\item{grid}{Options to control grid. Options are "minor" (all lines), "major" (major lines only), "major.x", "minor.x", "major.y", "minor.y".}
 }
 \value{
 ggplot2 theme
