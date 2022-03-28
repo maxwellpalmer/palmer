@@ -96,3 +96,56 @@ geom_sf_text2 <- function(...) {
                           y[!sf::st_is_empty(y)]}
   )
 }
+
+
+#' Calculate rook adjacency
+#'
+#' @param a A sf object.
+#' @param b A sf object. Optional. Default is object `a`.
+#'
+#' @return Sparse geometry binary predicate list
+#' @export
+#'
+#' @examples
+#' st_rook(ma)
+#'
+st_rook = function(a, b = a){
+  suppressMessages(sf::st_relate(a, b, pattern = "F***1****"))
+}
+
+#' Calculate adjacency list for a shape file.
+#'
+#' @param shp A sf object
+#' @param add_adj_for_islands Boolean. Default is `TRUE`. If there are unconnected islands, add adjancecies to nearest polygon(s).
+#' @param nearest_for_islands Integer. Default is `1`. How many adjacencies to add for islands.
+#'
+#' @return A dataframe of the indices of adjacent polygons.
+#' @export
+#'
+#' @importFrom sf st_distance
+#' @importFrom purrr map_dfr map_int
+#' @importFrom dplyr tibble row_number arrange
+#'
+#' @examples
+#' st_envelope(ma[1,])
+#'
+adjacent_polys <- function(shp, add_adj_for_islands=T, nearest_for_islands=1) {
+  adj <- st_rook(shp)
+  # Check for islands. Add adjacencies for nearest neighbors
+  if(add_adj_for_islands==T) {
+    if(sum(map_int(adj, ~ length(.)==0))>0) {
+      for(i in 1:nrow(shp)) {
+        if(length(adj[[i]])==0) {
+          x <- sf::st_distance(shp[i, ], shp) %>%
+            dplyr::tibble(dist=as.numeric(.)) %>% mutate(st=dplyr::row_number()) %>%
+            dplyr::arrange(dist) %>%
+            filter(dplyr::row_number()>1 & dplyr::row_number()<=nearest_for_islands+1)
+          adj[[i]] <- x$st
+        }
+      }
+    }
+  }
+
+  adj <- purrr::map_dfr(1:length(adj), ~ data.frame(poly1=., poly2=adj[[.]]))
+  return(adj)
+}
