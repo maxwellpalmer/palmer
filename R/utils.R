@@ -54,3 +54,15 @@ percent <- function(.data, ..., .keep_n = F) {
   }
   return(df)
 }
+
+#' Print as part of pipe. Print and return original value.
+#'
+#' @param x Any printable object.
+#'
+#' @return x
+#' @export
+#'
+pr <- function(x) {
+  print(x)
+  return(x)
+}
