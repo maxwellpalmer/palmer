@@ -14,3 +14,7 @@
 #' @source Kyle Walker / Tigris Package
 "fips"
 
+#' Custom Colors
+#' @source Tailwind CSS https://tailwindcss.com/docs/customizing-colors
+"mcols"
+

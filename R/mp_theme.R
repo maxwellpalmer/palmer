@@ -17,7 +17,7 @@ theme_mp <- function(base_family="Arial Narrow", base_size=11, grid="minor") {
                           legend.background = element_rect(fill = "transparent", colour = NA),
                           legend.box.background = element_rect(fill = "transparent", colour = NA),
                           legend.position = "bottom")
-  g <- g + ggplot2::theme(axis.text.y = ggplot2::element_text(size=8),
+  g <- g + ggplot2::theme(axis.text.y = element_text(size=8),
                           axis.title.y = element_text(size=8),
                           axis.text.x = element_text(size=8),
                           axis.title.x = element_text(size=8),
@@ -28,26 +28,26 @@ theme_mp <- function(base_family="Arial Narrow", base_size=11, grid="minor") {
                           strip.text=element_text(size=10),
                           panel.border = element_rect(color="gray40", fill=NA, size=.25))
   if(grid =="none") {
-    g <- g + theme(panel.grid.major.x = element_blank(),
+    g <- g + ggplot2::theme(panel.grid.major.x = element_blank(),
                    panel.grid.major.y = element_blank(),
                    panel.grid.minor.x = element_blank(),
                    panel.grid.minor.y = element_blank())
   } else if(grid =="major") {
-    g <- g + theme(panel.grid.minor.x = element_blank(),
+    g <- g + ggplot2::theme(panel.grid.minor.x = element_blank(),
                    panel.grid.minor.y = element_blank())
   } else if(grid =="major.x") {
-    g <- g + theme(panel.grid.major.y = element_blank(),
+    g <- g + ggplot2::theme(panel.grid.major.y = element_blank(),
                    panel.grid.minor.x = element_blank(),
                    panel.grid.minor.y = element_blank())
   } else if(grid =="major.y") {
-    g <- g + theme(panel.grid.major.x = element_blank(),
+    g <- g + ggplot2::theme(panel.grid.major.x = element_blank(),
                    panel.grid.minor.x = element_blank(),
                    panel.grid.minor.y = element_blank())
-  } else if(grid =="minor.x") {
-    g <- g + theme(panel.grid.major.y = element_blank(),
+  } else if(grid =="minor.x" | grid=="x") {
+    g <- g + ggplot2::theme(panel.grid.major.y = element_blank(),
                    panel.grid.minor.y = element_blank())
-  } else if(grid=="minor.y") {
-    g <- g + theme(panel.grid.major.x = element_blank(),
+  } else if(grid=="minor.y" | grid=="y") {
+    g <- g + ggplot2::theme(panel.grid.major.x = element_blank(),
                    panel.grid.minor.x = element_blank())
   }
 
