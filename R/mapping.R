@@ -130,6 +130,11 @@ st_rook = function(a, b = a){
 #' st_envelope(ma[1,])
 #'
 adjacent_polys <- function(shp, add_adj_for_islands=T, nearest_for_islands=1) {
+  if(is.data.frame(shp)) {
+    if(nrow(shp)==1) return(data.frame(poly1=1, poly2=1))
+  } else if(is(shp, "sfc")) {
+    if(length(shp)==1) return(data.frame(poly1=1, poly2=1))
+  }
   adj <- st_rook(shp)
   # Check for islands. Add adjacencies for nearest neighbors
   if(add_adj_for_islands==T) {
@@ -148,4 +153,42 @@ adjacent_polys <- function(shp, add_adj_for_islands=T, nearest_for_islands=1) {
 
   adj <- purrr::map_dfr(1:length(adj), ~ data.frame(poly1=., poly2=adj[[.]]))
   return(adj)
+}
+
+#' Renumber polygons so neighboring polygons are more likely to have sequential numbers.
+#'
+#' @param shp A polygon shape file to renumber.
+#' @param adj Optional. An adjacency list, as produced by `palmer::adjacent_polys`.
+#'
+#' @return A vector of new district numbers
+#' @export
+#' @importFrom dplyr add_count arrange mutate select distinct pull
+#'
+renumber_polygons <- function(shp, adj=NULL) {
+  if(is.null(adj)) adj <- palmer::adjacent_polys(shp)
+  adj.renum <- adj %>% dplyr::add_count(poly1) %>%
+    dplyr::add_count(poly2, name="n2") %>%
+    dplyr::arrange(n, n2, poly1) %>%
+    dplyr::mutate(block.new=NA, block2.new=NA)
+  block.next=0
+  for(i in 1:nrow(adj.renum)) {
+    if(is.na(adj.renum$block.new[i])) {
+      block.next <- block.next+1
+      a = block.next
+      adj.renum$block.new[adj.renum$poly1==adj.renum$poly1[i]] = a
+      adj.renum$block2.new[adj.renum$poly2==adj.renum$poly1[i]] = a
+    }
+    if(is.na(adj.renum$block2.new[i])) {
+      block.next <- block.next+1
+      a = block.next
+      adj.renum$block.new[adj.renum$poly1==adj.renum$poly2[i]] = a
+      adj.renum$block2.new[adj.renum$poly2==adj.renum$poly2[i]] = a
+    }
+    adj.renum <- dplyr::arrange(adj.renum, block.new, poly1, n, n2)
+  }
+  res <- adj.renum %>% dplyr::select(d0=poly1, d.new=block.new) %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(d0) %>%
+    dplyr::pull(d.new)
+  res
 }
