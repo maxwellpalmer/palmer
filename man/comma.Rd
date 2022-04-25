@@ -4,7 +4,7 @@
 \alias{comma}
 \title{Format a large number with commas and a set number of digits.}
 \usage{
-comma(x, digits = 0, nsmall = digits)
+comma(x, digits = 0, nsmall = digits, prefix = NULL)
 }
 \arguments{
 \item{x}{A number or vector of numbers.}
@@ -12,6 +12,8 @@ comma(x, digits = 0, nsmall = digits)
 \item{digits}{The number of digits after the decimal place.}
 
 \item{nsmall}{The number of digits after the decimal place.}
+
+\item{prefix}{A character string to prepend to the formatted number, such as "$".}
 }
 \value{
 A string or vector of strings.

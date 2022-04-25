@@ -24,12 +24,15 @@ pct <- function(v, digits=0) {
 #' @param x A number or vector of numbers.
 #' @param digits The number of digits after the decimal place.
 #' @param nsmall The number of digits after the decimal place.
+#' @param prefix A character string to prepend to the formatted number, such as "$".
 #'
 #' @return A string or vector of strings.
 #' @export
 #'
-comma <- function(x, digits=0, nsmall=digits) {
-  format(round(as.numeric(x), digits), nsmall=nsmall, big.mark=",")
+comma <- function(x, digits=0, nsmall=digits, prefix=NULL) {
+  x <- format(round(as.numeric(x), digits), nsmall=nsmall, big.mark=",")
+  if(!is.null(prefix)) x <- paste0(prefix, x)
+  x
 }
 
 
