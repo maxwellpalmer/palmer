@@ -69,3 +69,22 @@ pr <- function(x) {
   print(x)
   return(x)
 }
+
+
+#' Drop columns of a data frame where all values are NA
+#'
+#' @param x A data frame
+#' @param verbose Optional. Display list of dropped columns.
+#'
+#' @return A data frame, without any columns where all values are missing.
+#' @export
+#'
+#' @examples
+#' x <- data.frame(a=1:5, b=1:5, c=NA, d=NA, e=letters[1:5])
+#' drop_na_cols(x, verbose=TRUE)
+drop_na_cols <- function(x, verbose=FALSE) {
+  if(verbose==TRUE) {
+    message(paste("Dropping columns:", paste(names(x)[colSums(is.na(x))==nrow(x)], collapse=", ")))
+  }
+  x[ , colSums(is.na(x)) < nrow(x)]
+}
