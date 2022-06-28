@@ -14,15 +14,15 @@
 #'
 state_std <- function(s=NULL, type="fips") {
   if(is.null(s)) stop("s cannot be null.")
-  if(! type %in% c("fips", "abb", "name")) stop(paste0("Invalid type: ", type))
+  if(! type %in% c("fips", "abb", "abbv", "ab", "name")) stop(paste0("Invalid type: ", type))
   s <- state_fips(s)
 
   if(type=="fips") return(s)
-  if(type=="abb") return(sapply(s, function(i) {
-    ifelse(is.na(i), NA, state_lookup$state[state_lookup$state_code==i])
+  if(type %in% c("abb", "ab", "abbv")) return(sapply(s, function(i) {
+    ifelse(is.na(i), NA, palmer::state_lookup$state[palmer::state_lookup$state_code==i])
     }, USE.NAMES = F))
   if(type=="name") return(sapply(s, function(i) {
-    ifelse(is.na(i), NA, state_lookup$state_name[state_lookup$state_code==i])
+    ifelse(is.na(i), NA, palmer::state_lookup$state_name[palmer::state_lookup$state_code==i])
     }, USE.NAMES = F))
 }
 
@@ -45,14 +45,14 @@ state_fips <- function(s=NULL)  {
   }
   s <- toupper(s)
 
-  if(s %in% state_lookup$state_code) {
+  if(s %in% palmer::state_lookup$state_code) {
     return(s)
   }
-  if(s %in% toupper(state_lookup$state)) {
-    return(state_lookup$state_code[toupper(state_lookup$state) == s])
+  if(s %in% toupper(palmer::state_lookup$state)) {
+    return(palmer::state_lookup$state_code[toupper(palmer::state_lookup$state) == s])
   }
-  if(s %in% toupper(state_lookup$state_name)) {
-    return(state_lookup$state_code[toupper(state_lookup$state_name) == s])
+  if(s %in% toupper(palmer::state_lookup$state_name)) {
+    return(palmer::state_lookup$state_code[toupper(palmer::state_lookup$state_name) == s])
   }
   return(NA)
 }
