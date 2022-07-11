@@ -83,9 +83,8 @@ pr <- function(x) {
 #' x <- data.frame(a=1:5, b=1:5, c=NA, d=NA, e=letters[1:5])
 #' drop_na_cols(x, verbose=TRUE)
 drop_na_cols <- function(x, verbose=FALSE) {
-  to_drop <- colSums(is.na(x))==nrow(x)
   if(verbose==TRUE) {
-    message(paste("Dropping columns:", paste(names(x)[to_drop], collapse=", ")))
+    message(paste("Dropping columns:", paste(names(x)[colSums(is.na(x))==nrow(x)], collapse=", ")))
   }
-  x[ , !to_drop]
+  x[ , colSums(is.na(x)) < nrow(x)]
 }
