@@ -1,7 +1,6 @@
 #' Shape file of Massachusetts counties
 #'
 #' @format A sf object with 14 rows and 10 variables.
-
 #' @source U.S. Census
 "ma"
 
@@ -17,4 +16,8 @@
 #' Custom Colors
 #' @source Tailwind CSS https://tailwindcss.com/docs/customizing-colors
 "mcols"
+
+#' Massachusetts Municipalities
+#' @source US Census shape file via tigris
+"mass_munis"
 
