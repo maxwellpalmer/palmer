@@ -20,6 +20,5 @@ A dataframe of the indices of adjacent polygons.
 Calculate adjacency list for a shape file.
 }
 \examples{
-st_envelope(ma[1,])
 
 }

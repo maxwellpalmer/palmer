@@ -3,6 +3,7 @@
 #' Make a simple ggplot map
 #'
 #' @param .data A sf object
+#' @param size Optional point size
 #' @param ... Additional arguments passed to `geom_sf`
 #'
 #' @return A ggplot2 object
@@ -10,9 +11,9 @@
 #'
 #' @import ggplot2
 #'
-qmap <- function(.data, ...) {
-  ggplot(.data) +
-    geom_sf(color="black", size=.25, ...) +
+qmap <- function(.data, size=.25, ...) {
+  ggplot2::ggplot(.data) +
+    ggplot2::geom_sf(color="black", size=size, ...) +
     theme_void()
 }
 
@@ -124,27 +125,28 @@ st_rook = function(a, b = a){
 #'
 #' @importFrom sf st_distance
 #' @importFrom purrr map_dfr map_int
-#' @importFrom dplyr tibble row_number arrange
+#' @importFrom dplyr tibble row_number arrange filter
+#' @importFrom methods is
+#' @importFrom rlang .data
 #'
 #' @examples
-#' st_envelope(ma[1,])
 #'
 adjacent_polys <- function(shp, add_adj_for_islands=T, nearest_for_islands=1) {
   if(is.data.frame(shp)) {
     if(nrow(shp)==1) return(data.frame(poly1=1, poly2=1))
-  } else if(is(shp, "sfc")) {
+  } else if(methods::is(shp, "sfc")) {
     if(length(shp)==1) return(data.frame(poly1=1, poly2=1))
   }
   adj <- st_rook(shp)
   # Check for islands. Add adjacencies for nearest neighbors
   if(add_adj_for_islands==T) {
-    if(sum(map_int(adj, ~ length(.)==0))>0) {
+    if(sum(map_int(adj, function(i) length(i)==0))>0) {
       for(i in 1:nrow(shp)) {
         if(length(adj[[i]])==0) {
-          x <- sf::st_distance(shp[i, ], shp) %>%
-            dplyr::tibble(dist=as.numeric(.)) %>% mutate(st=dplyr::row_number()) %>%
-            dplyr::arrange(dist) %>%
-            filter(dplyr::row_number()>1 & dplyr::row_number()<=nearest_for_islands+1)
+          x <- sf::st_distance(shp[i, ], shp)
+          x <- dplyr::tibble(dist=as.numeric(x)) %>% mutate(st=dplyr::row_number()) %>%
+            dplyr::arrange(.data$dist) %>%
+            dplyr::filter(dplyr::row_number()>1 & dplyr::row_number()<=nearest_for_islands+1)
           adj[[i]] <- x$st
         }
       }
@@ -192,3 +194,22 @@ renumber_polygons <- function(shp, adj=NULL) {
     dplyr::pull(d.new)
   res
 }
+
+#' Find the weighted centroid of a set of points
+#'
+#' @param x A sf or sfc object. Must be "POINTS".
+#' @param weight A vector of weights
+#'
+#' @return A sfc object with the weighted centroid of the points
+#' @export
+#' @import sf
+#'
+st_weighted_centroid <- function(x, weight) {
+  if(!inherits(x, "sf") & !inherits(x, "sfc")) stop(deparse(substitute(x)), " must be a 'sf' or 'sfc' object")
+  if(all(st_geometry_type(x)!="POINT")) stop(deparse(substitute(x)), " must be type \"POINT\"")
+  if(!all(is.numeric(weight))) stop(deparse(substitute(weight)), " must be type numeric")
+
+  st_point(c(sum(st_coordinates(x)[,1]*weight)/sum(weight), sum(st_coordinates(x)[,2]*weight)/sum(weight))) %>%
+    st_sfc(crs=st_crs(x))
+}
+

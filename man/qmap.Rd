@@ -4,10 +4,12 @@
 \alias{qmap}
 \title{Make a simple ggplot map}
 \usage{
-qmap(.data, ...)
+qmap(.data, size = 0.25, ...)
 }
 \arguments{
 \item{.data}{A sf object}
+
+\item{size}{Optional point size}
 
 \item{...}{Additional arguments passed to \code{geom_sf}}
 }

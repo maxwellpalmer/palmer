@@ -46,14 +46,19 @@ comma <- function(x, digits=0, nsmall=digits, prefix=NULL) {
 #' @export
 #'
 #' @importFrom dplyr count mutate select
+#' @importFrom rlang .data
+#'
+#' @examples
+#' percent(mtcars, cyl)
+#' percent(mtcars, cyl, gear)
 #'
 percent <- function(.data, ..., .keep_n = F) {
 
   df <- dplyr::count(.data, ...)
-  df <- dplyr::mutate(df, pct = n/sum(n))
+  df <- dplyr::mutate(df, pct = .data$n/sum(.data$n))
 
   if (.keep_n == F) {
-    df <- dplyr::select(df, -n)
+    df <- dplyr::select(df, -"n")
   }
   return(df)
 }
