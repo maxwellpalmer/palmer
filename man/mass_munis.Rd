@@ -5,7 +5,7 @@
 \alias{mass_munis}
 \title{Massachusetts Municipalities}
 \format{
-An object of class \code{sf} (inherits from \code{data.frame}) with 16499 rows and 6 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 351 rows and 6 columns.
 }
 \source{
 US Census shape file via tigris
