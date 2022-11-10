@@ -19,3 +19,8 @@ A data frame.
 \description{
 Summarize a data frame and calculate percent for each group.
 }
+\examples{
+percent(mtcars, cyl)
+percent(mtcars, cyl, gear)
+
+}
