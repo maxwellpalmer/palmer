@@ -21,3 +21,8 @@
 #' @source US Census shape file via tigris
 "mass_munis"
 
+#' U.S. Presidents
+#'
+#' @source N/A
+"presidents"
+
