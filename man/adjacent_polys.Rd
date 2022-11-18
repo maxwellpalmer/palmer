@@ -19,6 +19,3 @@ A dataframe of the indices of adjacent polygons.
 \description{
 Calculate adjacency list for a shape file.
 }
-\examples{
-
-}

@@ -129,8 +129,6 @@ st_rook = function(a, b = a){
 #' @importFrom methods is
 #' @importFrom rlang .data
 #'
-#' @examples
-#'
 adjacent_polys <- function(shp, add_adj_for_islands=T, nearest_for_islands=1) {
   if(is.data.frame(shp)) {
     if(nrow(shp)==1) return(data.frame(poly1=1, poly2=1))
