@@ -26,3 +26,11 @@
 #' @source N/A
 "presidents"
 
+#' A color palette based on the City of Boston Brand Guidelines
+#' https://www.boston.gov/departments/innovation-and-technology/brand-guidelines
+#'
+"bos"
+
+#' BU Red Color Code
+#'
+"bu_red"
