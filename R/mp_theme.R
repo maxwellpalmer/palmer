@@ -55,3 +55,31 @@ theme_mp <- function(base_family="Arial Narrow", base_size=11, grid="minor") {
 }
 
 
+#' ggplot2 theme for presentations
+#'
+#' @param base_size Base font size. Default is 32.
+#' @param base_family Base font family. Default is Montserrat (must be installed)
+#'
+#' @return ggplot2 theme
+#' @export
+#'
+#' @import ggplot2
+#'
+theme_pres <- function(base_size=32, base_family="Montserrat") {
+  g <- ggplot2::theme_minimal(base_family=base_family, base_size=base_size)
+  g <- g + ggplot2::theme(panel.background = element_rect(fill = "transparent", colour = NA),
+                          plot.background = element_rect(fill = "transparent", colour = NA),
+                          legend.background = element_rect(fill = "transparent", colour = NA),
+                          legend.box.background = element_rect(fill = "transparent", colour = NA),
+                          legend.position = "bottom")
+  g <- g + ggplot2::theme(plot.title.position = "plot")
+  g <- g + ggplot2::theme(panel.spacing.x=unit(.5, "lines"),
+                          panel.spacing.y=unit(.5, "lines"),
+                          panel.border = element_rect(color="#58585B", fill=NA, size=1),
+                          panel.grid = element_line(color="#58585B", linewidth=.2),
+                          axis.text = element_text(color="#58585B"),
+                          axis.title = element_text(color="#58585B"))
+  g
+}
+
+
