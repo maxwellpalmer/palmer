@@ -4,12 +4,20 @@
 \alias{ei_output}
 \title{Title}
 \usage{
-ei_output(ei_md_model, cols = NULL, full = FALSE, drop_last_col = FALSE)
+ei_output(
+  ei_md_model,
+  cols = NULL,
+  formula = NULL,
+  full = FALSE,
+  drop_last_col = FALSE
+)
 }
 \arguments{
 \item{ei_md_model}{A model object estimated from eiPack::ei.MD.bayes()}
 
 \item{cols}{A vector of column names to include in the output, as characters. If NULL, columns are automatically detected from the model formula.}
+
+\item{formula}{The formula usef for running EI. Must be provided if cols is null.}
 
 \item{full}{If TRUE, provide differences between columns across rows and between rows across columns. Default is FALSE.}
 

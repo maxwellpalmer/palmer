@@ -2,6 +2,7 @@
 #'
 #' @param ei_md_model A model object estimated from eiPack::ei.MD.bayes()
 #' @param cols A vector of column names to include in the output, as characters. If NULL, columns are automatically detected from the model formula.
+#' @param formula The formula usef for running EI. Must be provided if cols is null.
 #' @param full If TRUE, provide differences between columns across rows and between rows across columns. Default is FALSE.
 #' @param drop_last_col If TRUE, drop the last column variable. Only applies if cols is not supplied. Default is FALSE.
 #'
@@ -16,9 +17,10 @@
 #' @importFrom stats quantile formula
 #' @importFrom Formula Formula
 #'
-ei_output <- function(ei_md_model, cols=NULL, full=FALSE, drop_last_col=FALSE) {
+ei_output <- function(ei_md_model, cols=NULL, formula=NULL, full=FALSE, drop_last_col=FALSE) {
+  if(is.null(cols) & is.null(formula)) stop("cols or formula must be provided.")
   if(is.null(cols)) {
-    cols <- formula(Formula::Formula(eval(ei_md_model$call$formula)), lhs = TRUE, rhs = FALSE) %>% all.vars()
+    cols <- formula(Formula::Formula(eval(formula)), lhs = TRUE, rhs = FALSE) %>% all.vars()
     if(drop_last_col==TRUE) cols <- cols[-length(cols)]
     message(glue("cols not specified. Using column variables: {glue_collapse(cols, sep=', ')}"))
   }
