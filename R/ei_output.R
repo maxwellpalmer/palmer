@@ -34,7 +34,8 @@ ei_output <- function(ei_md_model, cols=NULL, full=FALSE, drop_last_col=FALSE) {
   ei.res <- d %>% group_by(row, col) %>%
     summarize(est=mean(value),
               ci.lower = stats::quantile(value, probs = .025),
-              ci.upper = stats::quantile(value, probs = .975))
+              ci.upper = stats::quantile(value, probs = .975)) %>%
+    ungroup()
 
   if(full==FALSE) return(ei.res)
 
