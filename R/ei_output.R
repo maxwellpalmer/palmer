@@ -12,8 +12,8 @@
 #'
 #' @export
 #'
-#' @import dplyr eiPack
-#' @importFrom stats quantile
+#' @import dplyr eiPack glue tidyr
+#' @importFrom stats quantile formula
 #' @importFrom Formula Formula
 #'
 ei_output <- function(ei_md_model, cols=NULL, full=FALSE, drop_last_col=FALSE) {

@@ -97,3 +97,24 @@ drop_na_cols <- function(x, verbose=FALSE) {
   }
   x[ , to_drop==FALSE]
 }
+
+
+#' List of Lists to Tibble
+#'
+#' @param x A list of lists. Each sublist must contain items with the same names and types.
+#'
+#' @return A tibble
+#' @export
+#' @importFrom purrr map map_vec
+#' @importFrom rlang :=
+list_of_lists_to_tibble <- function(x) {
+  y <- tibble(.id:=1:length(x))
+  for(n in names(x[[1]])) {
+    if(typeof(x[[1]][n][[1]])=="list") {
+      y <- mutate(y, !!n := map(1:length(x), ~ x[[.]][n][[1]]))
+    } else {
+      y <- mutate(y, !!n := map_vec(1:length(x), ~ x[[.]][n][[1]]))
+    }
+  }
+  return(y)
+}
