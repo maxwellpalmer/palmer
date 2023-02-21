@@ -64,7 +64,7 @@ ei_output <- function(ei_md_model, cols=NULL, formula=NULL, full=FALSE, drop_las
     for(j in unique(d$row)[unique(d$row)!=i]) {
       for(k in unique(d$col)) {
         y <- filter(x, col==k) %>% mutate(x=.[[i]]-.[[j]])
-        res[[glue("{i}/{j}/{k}")]] <- tibble(c1=i, c2=j, row=k,
+        res[[glue("{i}/{j}/{k}")]] <- tibble(r1=i, r2=j, col=k,
                                              diff=mean(y$x),
                                              ci.lower=stats::quantile(y$x, .025),
                                              ci.upper=stats::quantile(y$x, .975),
