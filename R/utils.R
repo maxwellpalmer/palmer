@@ -110,7 +110,7 @@ drop_na_cols <- function(x, verbose=FALSE) {
 list_of_lists_to_tibble <- function(x) {
   y <- tibble(.id:=1:length(x))
   for(n in names(x[[1]])) {
-    if(typeof(x[[1]][n][[1]])=="list") {
+    if(typeof(x[[1]][n][[1]])=="list" | length(x[[1]][n][[1]])>1) {
       y <- mutate(y, !!n := map(1:length(x), ~ x[[.]][n][[1]]))
     } else {
       y <- mutate(y, !!n := map_vec(1:length(x), ~ x[[.]][n][[1]]))
