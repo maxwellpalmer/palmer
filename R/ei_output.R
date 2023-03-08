@@ -1,4 +1,4 @@
-#' Title
+#' Ecological Inference Output Processing
 #'
 #' @param ei_md_model A model object estimated from eiPack::ei.MD.bayes()
 #' @param cols A vector of column names to include in the output, as characters. If NULL, columns are automatically detected from the model formula.
