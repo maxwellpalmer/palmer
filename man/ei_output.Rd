@@ -2,7 +2,7 @@
 % Please edit documentation in R/ei_output.R
 \name{ei_output}
 \alias{ei_output}
-\title{Title}
+\title{Ecological Inference Output Processing}
 \usage{
 ei_output(
   ei_md_model,
@@ -30,5 +30,5 @@ differences between each pair of rows for every column, (3) a data frame with me
 for every row, (4) the number of ei.samples, and (5) the number of observations in the data.
 }
 \description{
-Title
+Ecological Inference Output Processing
 }
