@@ -2,6 +2,7 @@
 
 export("%>%")
 export(adjacent_polys)
+export(color_shp)
 export(comma)
 export(coord_sf_from_sf)
 export(coord_sf_from_sf_square)
