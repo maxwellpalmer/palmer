@@ -216,7 +216,7 @@ st_weighted_centroid <- function(x, weight) {
 #'
 #' This function assigns colors to polygons in a map to (1) color each polygon differently from its neighbors, and (2) use each color roughly the same number of times.
 #'
-#' @param shp A polygon shape file
+#' @param shp A polygon shape file. Must be of class `sf` or `sfc`.
 #' @param n_cols The number of colors to use. Defaul is 5.
 #' @param retry If the algorithm fails, retry with `n_cols+1` colors. Default is TRUE. Function fails if polygons unable to be colors with 10 colors.
 #' @param ... Additional arguments, only used internally.
@@ -224,60 +224,53 @@ st_weighted_centroid <- function(x, weight) {
 #' @return A vector of numbers identifying the colors for each shape.
 #'
 #' @import dplyr glue
+#' @importFrom sf st_as_sf
+#' @importFrom cli cli_progress_bar cli_progress_update cli_progress_done
 #'
 #' @export
 #'
 color_shp <- function(shp, n_cols = 5, retry = TRUE, ...) {
   v <- list(...)
-  if("adj" %in% names(v) & "adj.renum" %in% names(v)) {
+  if(is(shp, "sfc")) shp <- sf::st_as_sf(shp)
+  if(!is(shp, "sf")) stop("shp must be class sf or sfc")
+
+  if("adj" %in% names(v)) {
     adj <- v$adj
-    adj.renum <-v$adj.renum
   } else {
     message("Calculating adjacencies")
     adj <- palmer::adjacent_polys(shp, nearest_for_islands = 4)
-    adj.renum <- adj %>% dplyr::add_count(poly1) %>%
-      dplyr::add_count(poly2, name="n2") %>%
-      dplyr::arrange(n, n2, poly1) %>%
-      dplyr::mutate(poly1.new=NA, poly2.new=NA)
-    num.next <- 0
-    for(i in 1:nrow(adj.renum)) {
-      if(is.na(adj.renum$poly1.new[i])) {
-        num.next <- num.next+1
-        a = num.next
-        adj.renum$poly1.new[adj.renum$poly1==adj.renum$poly1[i]] = a
-        adj.renum$poly2.new[adj.renum$poly2==adj.renum$poly1[i]] = a
-      }
-      if(is.na(adj.renum$poly2.new[i])) {
-        num.next <- num.next+1
-        a = num.next
-        adj.renum$poly1.new[adj.renum$poly1==adj.renum$poly2[i]] = a
-        adj.renum$poly2.new[adj.renum$poly2==adj.renum$poly2[i]] = a
-      }
-      adj.renum <- dplyr::arrange(adj.renum, poly1.new, poly1, n, n2)
-    }
-    adj.renum <- adj.renum %>% dplyr::select(poly1.old=poly1, poly1.new) %>% dplyr::distinct() %>%
-      dplyr::arrange(poly1.new)
   }
+  adj.length <- adj %>% count(poly1) %>% pull(n)
 
   n=nrow(shp)
-
   cols.list <- data.frame(col=seq(1,n_cols), n=rep(0, n_cols))
-  cols <- rep(NA, n)
-  cols[1] <- cols.list$col[1]
 
-  for(i in adj.renum$poly1.old) {
-    # message(i)
-    neighboring.cols <- cols[adj$poly2[adj$poly1==i]] %>% na.omit()
-    j <- suppressWarnings((dplyr::filter(cols.list, ! col %in% neighboring.cols) %>%
-            dplyr::filter(n==min(n)))$col[1])
-    cols[i] <- j
-    cols.list$n[j] <- cols.list$n[j]+1
+  cli::cli_progress_bar("Assigning colors", total=n, clear=F)
+  dat <- tibble(id=1:nrow(shp), col=NA, adj.length, choices=rep(list(cols.list$col), n), n_choices=n_cols)
+  for(x in 1:n) {
+    i <- dat %>% filter(is.na(col)) %>%
+      filter(n_choices==min(n_choices)) %>%
+      filter(adj.length==max(adj.length)) %>% slice(1) %>% pull(id)
+    next_col <- filter(cols.list, col %in% dat$choices[[i]]) %>% filter(n==min(n)) %>% slice(1) %>% pull(col)
+    dat$col[i] <- next_col
+    cols.list$n[next_col] <- cols.list$n[next_col]+1
+
+    dat <- dat %>% mutate(choices=map(1:n, \(j) {
+      if(is.na(col[j]) & i %in% adj$poly2[adj$poly1==j]) return(choices[[j]][choices[[j]]!=next_col])
+      return(choices[[j]])
+    }),
+    n_choices=map_dbl(choices, length))
+    if(min(dat$n_choices)==0) {
+      cli::cli_progress_done(result="failed")
+      break
+    }
+    cli::cli_progress_update()
   }
-  if(any(is.na(cols)) & retry==TRUE) {
+
+  if(any(is.na(dat$col)) & retry==TRUE) {
     if(n_cols>=10) stop("Unable to complete algorithm with 10 colors.")
     message(glue::glue("Unable to assign colors with only {n_cols} colors. Trying again with {n_cols+1} colors."))
-    return(color_shp(shp, n_cols=n_cols+1, adj=adj, adj.renum=adj.renum))
+    return(color_shp(shp, n_cols=n_cols+1, adj=adj))
   }
-  return(cols)
+  return(dat$col)
 }
-

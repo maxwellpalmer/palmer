@@ -7,7 +7,7 @@
 color_shp(shp, n_cols = 5, retry = TRUE, ...)
 }
 \arguments{
-\item{shp}{A polygon shape file}
+\item{shp}{A polygon shape file. Must be of class \code{sf} or \code{sfc}.}
 
 \item{n_cols}{The number of colors to use. Defaul is 5.}
 
