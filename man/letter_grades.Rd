@@ -15,10 +15,10 @@ letter_grades(
 
 \item{vals}{Optional. A vector of the lower bound of each grade level, sorted from best to worst.}
 
-\item{labs}{Optional. A vector of the names of each grade, sorted from best to worse. Must be the same length as vals.}
+\item{labs}{Optional. A vector of the names of each grade, sorted from best to worse. Must be the same length as \code{vals}.}
 }
 \value{
-A vector of grades, with factor levels as specified by labs.
+A vector of grades, with factor levels as specified by \code{labs}.
 }
 \description{
 Calculate letter grades from percentages

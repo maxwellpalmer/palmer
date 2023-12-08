@@ -2,9 +2,9 @@
 #'
 #' @param scores A vector of percentages
 #' @param vals Optional. A vector of the lower bound of each grade level, sorted from best to worst.
-#' @param labs Optional. A vector of the names of each grade, sorted from best to worse. Must be the same length as vals.
+#' @param labs Optional. A vector of the names of each grade, sorted from best to worse. Must be the same length as `vals`.
 #'
-#' @return A vector of grades, with factor levels as specified by labs.
+#' @return A vector of grades, with factor levels as specified by `labs`.
 #' @export
 #'
 #' @examples
