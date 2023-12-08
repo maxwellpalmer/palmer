@@ -64,6 +64,18 @@ coord_sf_from_sf_square <- function(.shp, expand=TRUE, ...) {
            expand = expand, ...)
 }
 
+#' Find centroid of the inscribed circle of a polygon
+#' @param shp A polygon shape file
+#' @return List of points
+#'
+centroid_of_inscribed_circle <- function(shp) {
+  s <- sf::sf_use_s2()
+  suppressMessages(sf::sf_use_s2(FALSE))
+  y <- suppressMessages(suppressWarnings(sf::st_centroid(sf::st_inscribed_circle(sf::st_geometry(shp)))))
+  suppressMessages(sf::sf_use_s2(s))
+  y[!sf::st_is_empty(y)]
+}
+
 #' Add geom_sf_label with labels located in inscribed circles instead of points on surface.
 #'
 #' @param ... Additional arguments passed to `geom_sf_label`.
@@ -75,13 +87,7 @@ coord_sf_from_sf_square <- function(.shp, expand=TRUE, ...) {
 #'
 geom_sf_label2 <- function(...) {
   ggplot2::geom_sf_label(...,
-                         fun.geometry = function(x) {
-                           s <- sf_use_s2()
-                           sf_use_s2(FALSE)
-                           y <- suppressMessages(suppressWarnings(sf::st_centroid(sf::st_inscribed_circle(sf::st_geometry(x)))))
-                           sf_use_s2(s)
-                           y[!sf::st_is_empty(y)]
-                           }
+                         fun.geometry = centroid_of_inscribed_circle
   )
 }
 
@@ -89,15 +95,9 @@ geom_sf_label2 <- function(...) {
 #' @export
 geom_sf_text2 <- function(...) {
   ggplot2::geom_sf_text(...,
-                        fun.geometry = function(x) {
-                          s <- sf_use_s2()
-                          sf_use_s2(FALSE)
-                          y <- suppressMessages(suppressWarnings(sf::st_centroid(sf::st_inscribed_circle(sf::st_geometry(x)))))
-                          sf_use_s2(s)
-                          y[!sf::st_is_empty(y)]}
+                        fun.geometry = centroid_of_inscribed_circle()
   )
 }
-
 
 #' Calculate rook adjacency
 #'
