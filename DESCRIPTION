@@ -1,10 +1,10 @@
 Package: palmer
 Title: Maxwell Palmer's Personal R Package
-Version: 0.0.0.3
+Version: 0.0.0.4
 Authors@R: 
     person("Maxwell", "Palmer", , "mbpalmer@bu.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7991-2499"))
-Description: What the package does (one paragraph).
+Description: Helper functions for mapping, ecological inference, and other misc.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
