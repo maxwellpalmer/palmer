@@ -10,18 +10,18 @@
 #'
 #' @import ggplot2
 #'
-theme_mp <- function(base_family="Arial Narrow", base_size=11, grid="minor") {
+theme_mp <- function(base_family="Arial Narrow", base_size=12, grid="minor") {
   g <- ggplot2::theme_minimal(base_family=base_family, base_size=base_size)
   g <- g + ggplot2::theme(panel.background = element_rect(fill = "transparent", colour = NA),
                           plot.background = element_rect(fill = "transparent", colour = NA),
                           legend.background = element_rect(fill = "transparent", colour = NA),
                           legend.box.background = element_rect(fill = "transparent", colour = NA),
                           legend.position = "bottom")
-  g <- g + ggplot2::theme(axis.text.y = element_text(size=8),
-                          axis.title.y = element_text(size=8),
-                          axis.text.x = element_text(size=8),
-                          axis.title.x = element_text(size=8),
-                          plot.caption = element_text(size=8),
+  g <- g + ggplot2::theme(axis.text.y = element_text(size=10),
+                          axis.title.y = element_text(size=10),
+                          axis.text.x = element_text(size=10),
+                          axis.title.x = element_text(size=10),
+                          plot.caption = element_text(size=10),
                           plot.title.position = "plot")
   g <- g + ggplot2::theme(panel.spacing.x=unit(.5, "lines"),
                           panel.spacing.y=unit(.5, "lines"),

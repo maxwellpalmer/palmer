@@ -4,7 +4,7 @@
 \alias{theme_mp}
 \title{Custom ggplot2 theme}
 \usage{
-theme_mp(base_family = "Arial Narrow", base_size = 11, grid = "minor")
+theme_mp(base_family = "Arial Narrow", base_size = 12, grid = "minor")
 }
 \arguments{
 \item{base_family}{Base font family. Default is "Arial Narrow".}
