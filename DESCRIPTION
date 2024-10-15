@@ -1,6 +1,6 @@
 Package: palmer
 Title: Maxwell Palmer's Personal R Package
-Version: 0.0.0.8
+Version: 0.0.0.9
 Authors@R: 
     person("Maxwell", "Palmer", , "mbpalmer@bu.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7991-2499"))
@@ -13,4 +13,4 @@ RoxygenNote: 7.3.2
 Depends: 
     R (>= 4.0)
 Imports:
-    dplyr, sf, ggplot2, purrr, magrittr, methods, rlang, eiPack, Formula, glue, tidyr, cli, stringr, scales
+    dplyr, sf, ggplot2, purrr, magrittr, methods, rlang, eiPack, Formula, glue, tidyr, cli, stringr, scales, grid
