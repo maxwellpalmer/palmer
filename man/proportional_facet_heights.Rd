@@ -2,21 +2,46 @@
 % Please edit documentation in R/proportional_facets.R
 \name{proportional_facet_heights}
 \alias{proportional_facet_heights}
-\title{Proportional facet heights}
+\alias{proportional_facet_widths}
+\title{Proportional facets}
 \usage{
 proportional_facet_heights(p)
+
+proportional_facet_widths(p)
 }
 \arguments{
-\item{p}{A ggplot with wrapped facets in a single column using \code{facet_wrap(~ var, ncol=1, scales="free_y")}
-
-#' @import ggplot2, grid, dplyr}
+\item{p}{A ggplot with wrapped facets in a single column using \code{facet_wrap(~ var, ncol=1, scales="free_y")} or \code{facet_wrap(~ var, nrow=1, scales="free_x")}}
 }
 \value{
 A grob
 }
 \description{
-The default behavior for ggplot facets is that all facets have the same dimension. When plotting
-facets with discrete axes and \code{scales=free_y}, the axis spacing will be inconsistent. This function
-adjusts the relative heights of the facets so that the facet heights are proportional to the number
+The default behavior for ggplot facets is that all facets have the same dimensions. When plotting
+facets with discrete axes and \code{scales=free_y} or \code{scales=free_x}, the axis spacing will be inconsistent.
+This function adjusts the relative heights of the facets so that the facet heights are proportional to the number
 of items on the discrete scale for each facet.
+}
+\details{
+\subsection{Notes:}{
+
+These functions only work for plots where the facets are a single row or column. The functions return a \code{grob} object,
+and can be displayed interactively with \code{plot}, and saved with \code{ggsave} and other functions to save images, or used in a
+Quarto or Rmarkdown document. The output of this function does not update \code{ggplot2::last_plot()}.
+}
+}
+\examples{
+library(ggplot2)
+dat <- data.frame(x=c(1,2,3,1,2,3,1), y=LETTERS[1:7], z=c(rep("Set 1", 2), rep("Set 2", 5)))
+p <- ggplot(dat, aes(x=x, y=y)) +
+geom_point() +
+facet_wrap(~z, ncol=1, scales="free_y")
+p
+plot(proportional_facet_heights(p))
+
+p <- ggplot(dat, aes(x=y, y=x)) +
+geom_point() +
+facet_wrap(~z, nrow=1, scales="free_x")
+p
+plot(proportional_facet_widths(p))
+
 }
