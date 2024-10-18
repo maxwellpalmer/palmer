@@ -1,4 +1,4 @@
-
+globalVariables(c("geometry", "y", "a", "ycent"))
 
 #' Make a simple ggplot map
 #'
@@ -273,4 +273,49 @@ color_shp <- function(shp, n_cols = 5, retry = TRUE, ...) {
     return(color_shp(shp, n_cols=n_cols+1, adj=adj))
   }
   return(dat$col)
+}
+
+#' Find widest rectangle in state.
+#'
+#' Used to label placement. Finds a rectangle at least 90% as wide as possible, with preference for rectangles closer to the centroid.
+#'
+#' @param shp Polygon shape file
+#' @param n Two-item list of the number of rectangles to draw in each direction. Higher values are more precise but slower. Default is `c(20,20)`.
+#'
+#' @return Centroid of wide rectangle.
+widest_rectangle <- function(shp, n=c(20, 20)) {
+
+  if("sf" %in% class(shp)) {
+    shp <- pull(shp, attr(shp, "sf_column"))
+  }
+  if(length(shp)>1) {
+    x <- lapply(1:length(shp), function(i) widest_rectangle(shp[i], n))
+    return(do.call(rbind, x) %>% tibble() %>% st_as_sf(crs=st_crs(shp)))
+  }
+
+  g <- st_make_grid(shp, square=T, n=n)
+  g <- tibble(i=1:length(g), geometry=g) %>% st_as_sf()
+  g <- g %>% mutate(x=map_dbl(geometry, ~ st_bbox(.)$xmin),
+                    y=map_dbl(geometry, ~ st_bbox(.)$ymin)) %>%
+    arrange(x, y) %>%
+    group_by(x) %>%
+    mutate(x2=cur_group_id()) %>%
+    group_by(y) %>%
+    mutate(y2=cur_group_id()) %>%
+    ungroup()
+
+  g2 <- suppressMessages(g[st_contains(shp, g) %>% unlist(), ])
+
+  g3 <- g2 %>% group_by(y) %>%
+    summarise(geometry=suppressMessages(st_union(geometry))) %>%
+    select(y, geometry) %>%
+    st_cast("MULTIPOLYGON") %>% suppressWarnings(st_cast("POLYGON")) %>%
+    mutate(a=as.numeric(st_area(geometry))) %>%
+    filter(a>=.9*max(a)) %>%
+    mutate(ycent=st_coordinates(suppressWarnings(st_centroid(shp)))[2]) %>%
+    filter(abs(y-ycent)==min(abs(y-ycent))) %>%
+    filter(y==min(y), .by=y) %>%
+    filter(row_number()==1)
+
+  suppressWarnings(st_centroid(g3$geometry[1]))
 }
