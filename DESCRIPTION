@@ -1,6 +1,6 @@
 Package: palmer
 Title: Maxwell Palmer's Personal R Package
-Version: 0.0.1.0
+Version: 0.0.1.1
 Authors@R: 
     person("Maxwell", "Palmer", , "mbpalmer@bu.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7991-2499"))
