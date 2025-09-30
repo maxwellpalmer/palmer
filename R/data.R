@@ -34,3 +34,7 @@
 #' BU Red Color Code
 #'
 "bu_red"
+
+#' The "Reasonable Colors" palette developed by Matthew Howell. https://www.reasonable.work/colors/
+#'
+"rcols"
